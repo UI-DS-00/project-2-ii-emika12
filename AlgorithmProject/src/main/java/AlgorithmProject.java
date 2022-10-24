@@ -147,11 +147,13 @@ public class AlgorithmProject
                     if (myList.columnArr[i].size==0) {
                         myList.columnArr[i].head = new MyList.Node(node.row , node.column , node.data);
                         semi_node=myList.columnArr[i].head;
+                        semi_node.non_simulatedNode=node;
                         myList.columnArr[i].tail=myList.columnArr[i].head;
                     }
                     else
                     {
                         semi_node = new MyList.Node(node.row , node.column, node.data);
+                        semi_node.non_simulatedNode=node;
                         previous_node.next=semi_node;
                         semi_node.previous=previous_node;
                     }
@@ -187,11 +189,13 @@ public class AlgorithmProject
                     if (rowList[i].size == 0) {
                         rowList[i].head = new MyList.Node(node.row, node.column, node.data);
                         semi_node = rowList[i].head;
+                        semi_node.non_simulatedNode=node;
                         rowList[i].tail = rowList[i].head;
                     } else {
                         semi_node = new MyList.Node(node.row, node.column, node.data);
                         previous_node.next = semi_node;
                         semi_node.previous = previous_node;
+                        semi_node.non_simulatedNode=node;
                     }
 
                     ++rowList[i].size;
@@ -225,6 +229,7 @@ class MyList {
         int data;
 
 
+        Node non_simulatedNode=null;
         Node previous=null;
         Node next = null;
 
