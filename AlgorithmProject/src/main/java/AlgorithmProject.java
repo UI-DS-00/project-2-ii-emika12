@@ -16,48 +16,57 @@ public class AlgorithmProject
         readingFiles(myList);
 
 
-        MyList [] columnArr=ColumnArr(myList);
-        MyList [] rowArr=RowArr(myList);
+        MyList[] myLists=ColumnArr(myList);
+        RowArr(myList);
 
         int order= -1 ;
         Scanner sc=new Scanner(System.in);
 
         while (order != 0)
         {
-            System.out.println("1.add data\n2.remove data\n3.find data\n4.update\n5.print matrix\n6.save data\n0.end\n");
+            System.out.println("1.add data\n2.remove data\n3.find data\n4.update\n5.print matrix" +
+                    "\n6.save data\n7.data in specific row\n8.data in specific column\n0.end\n");
 
             order=sc.nextInt();
-           try {
-               switch (order) {
-                   case 1:
-                       System.out.println("enter the row , column , and the data ");
-                       myList.adding(sc.nextInt(), sc.nextInt(), sc.nextInt());
-                       break;
-                   case 2:
-                       System.out.println("enter the row , column , and the data ");
-                       myList.delete(sc.nextInt(), sc.nextInt(), sc.nextInt());
-                       break;
-                   case 3:
-                       System.out.println("enter the data you are looking for");
-                       myList.finding(sc.nextInt());
-                       break;
-                   case 4:
-                       System.out.println("enter the row , column , and the data ");
-                       myList.updating(sc.nextInt(), sc.nextInt(), sc.nextInt());
-                       break;
-                   case 5:
-                       myList.printMatrix(myList);
-                       break;
-                   case 6:
-                       myList.saveFiles();
-                       break;
-                   case 0:
-                       return;
-               }
-           }catch (Exception e) {
-               System.out.println(e.getMessage());
-               e.printStackTrace();
-           }
+            try {
+                switch (order) {
+                    case 1:
+                        System.out.println("enter the row , column , and the data ");
+                        myList.adding(sc.nextInt(), sc.nextInt(), sc.nextInt());
+                        break;
+                    case 2:
+                        System.out.println("enter the row , column , and the data ");
+                        myList.delete(sc.nextInt(), sc.nextInt(), sc.nextInt());
+                        break;
+                    case 3:
+                        System.out.println("enter the data you are looking for");
+                        myList.finding(sc.nextInt());
+                        break;
+                    case 4:
+                        System.out.println("enter the row , column , and the data ");
+                        myList.updating(sc.nextInt(), sc.nextInt(), sc.nextInt());
+                        break;
+                    case 5:
+                        myList.printMatrix(myList);
+                        break;
+                    case 6:
+                        myList.saveFiles();
+                        break;
+                    case 7:
+                        System.out.println("enter the index");
+                        myList.getIndexRow(sc.nextInt());
+                        break;
+                    case 8:
+                        System.out.println("enter the index");
+                        myList.getIndexColumn(sc.nextInt());
+                        break;
+                    case 0:
+                        return;
+                }
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            }
         }
 
     }
@@ -119,25 +128,26 @@ public class AlgorithmProject
 
     public static MyList[] ColumnArr(MyList myList)
     {
-        MyList [] columnList=new MyList[myList.column];
 
-        for (int i=0 ; i< columnList.length ;++i)
+
+        myList.columnArr=new MyList[myList.column];
+        for (int i=0 ; i< myList.columnArr.length ;++i)
         {
             MyList.Node node = myList.head;
             MyList.Node semi_node = null;
             MyList.Node previous_node=null;
 
-            columnList[i]=new MyList();
+            myList.columnArr[i]=new MyList();
 
 
             while (node != null)
             {
                 if (node.column == i)
                 {
-                    if (columnList[i].size==0) {
-                        columnList[i].head = new MyList.Node(node.row , node.column , node.data);
-                        semi_node=columnList[i].head;
-                        columnList[i].tail=columnList[i].head;
+                    if (myList.columnArr[i].size==0) {
+                        myList.columnArr[i].head = new MyList.Node(node.row , node.column , node.data);
+                        semi_node=myList.columnArr[i].head;
+                        myList.columnArr[i].tail=myList.columnArr[i].head;
                     }
                     else
                     {
@@ -146,20 +156,21 @@ public class AlgorithmProject
                         semi_node.previous=previous_node;
                     }
 
-                    ++columnList[i].size;
+                    ++myList.columnArr[i].size;
                 }
-                columnList[i].tail=semi_node;
+                myList.columnArr[i].tail=semi_node;
                 previous_node=semi_node;
                 node=node.next;
             }
         }
 
-        return columnList;
+        return myList.columnArr;
     }
 
     public static MyList[] RowArr(MyList myList)
     {
-        MyList [] rowList =new MyList[myList.row];
+        myList.rowArr=new MyList[myList.row];
+        MyList[] rowList =myList.rowArr;
 
 
         for (int i=0 ; i< rowList.length ;++i) {
@@ -204,7 +215,8 @@ class MyList {
     int row=0;
     int column=0;
 
-
+    MyList rowArr[] ;
+    MyList columnArr[];
 
     static class Node {
 
@@ -244,7 +256,7 @@ class MyList {
         {
             if ((node.row <= row && (node.next.row >= row))|| node.next==null)
                 if ((node.next.column >= column && node.next.row==row )||(node.next.row > row)
-                || (node.column <= column && node.row == row ))
+                        || (node.column <= column && node.row == row ))
                 {
                     Node newNode=add(node ,data , row , column);
                     if (newNode.next == null)
@@ -329,23 +341,23 @@ class MyList {
 
         }else
         {
-             for (int i= 0 ; i<row ; ++i)
-                 for (int j=0 ; j <column ;++j){
+            for (int i= 0 ; i<row ; ++i)
+                for (int j=0 ; j <column ;++j){
 
-                     Node node = this.head;
-                     boolean found = false;
-                     while (node != tail)
-                     {
-                         if (node.row == i && node.column == j) {
-                             found=true;
-                             break;
-                         }
-                         node= node.next;
-                     }
-                     if (!found)
-                         System.out.println("row : "+i + " column : "+j);
+                    Node node = this.head;
+                    boolean found = false;
+                    while (node != tail)
+                    {
+                        if (node.row == i && node.column == j) {
+                            found=true;
+                            break;
+                        }
+                        node= node.next;
+                    }
+                    if (!found)
+                        System.out.println("row : "+i + " column : "+j);
 
-                 }
+                }
         }
 
     }
@@ -394,7 +406,12 @@ class MyList {
             int counting=0;
 
             while (dataNodes != null) {
-                int zeros = (((dataNodes.row - row_difference) * myList.column) - column_difference -1) + dataNodes.column;
+
+                int zeros=0;
+                if (row_difference == dataNodes.row)
+                    zeros=dataNodes.column-column_difference-1;
+                else
+                    zeros = (myList.column - column_difference - 1)+((dataNodes.row -row_difference-1)*myList.column) + dataNodes.column;
                 if (row_difference == 0 && column_difference == 0 && dataNodes.column!=0 && dataNodes.row !=0)
                     zeros++;
 
@@ -412,7 +429,7 @@ class MyList {
 
                     zeros--;
                 }
-                if (counting +1 == myList.column) {
+                if (counting  == myList.column) {
                     System.out.println();
                     counting=0;
                 }
@@ -426,7 +443,7 @@ class MyList {
                 dataNodes=dataNodes.next;
             }
 
-            int last_numbers = ((myList.row - myList.tail.row -1 )* myList.column)+( myList.column -myList.tail.column+1);
+            int last_numbers =(myList.column-tail.column-1) + ((myList.row - tail.row -1 )*myList.column);
             while (last_numbers > 0)
             {
                 System.out.printf("0 ");
@@ -493,6 +510,38 @@ class MyList {
         }
         catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void getIndexRow(int index)
+    {
+        MyList list=this.rowArr[index];
+        Node node =list.head;
+
+        while (node != null)
+        {
+            System.out.println("data: " + node.data);
+            System.out.println("row: " + node.row + "  column: " + node.column);
+            System.out.println("==========================");
+
+            node=node.next;
+        }
+
+
+    }
+
+    public void getIndexColumn(int index)
+    {
+        MyList list=this.columnArr[index];
+        Node node =list.head;
+
+        while (node != null)
+        {
+            System.out.println("data: " + node.data);
+            System.out.println("row: " + node.row + "  column: " + node.column);
+            System.out.println("==========================");
+
+            node=node.next;
         }
     }
 }
